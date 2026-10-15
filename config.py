@@ -16,8 +16,8 @@ class Config:
 
     # Instrumen & Simbol
     # Disarankan 'XAUUSD=X' untuk spot broker, atau 'GC=F' untuk futures
-    PRIMARY_SYMBOL = os.getenv("SYMBOL", "XAUUSD=X")
-    FALLBACK_SYMBOLS = ["GC=F", "XAUUSD=X", "SI=F"]
+    PRIMARY_SYMBOL = os.getenv("SYMBOL", "GC=F")
+    FALLBACK_SYMBOLS = ["GC=F", "GLD", "SI=F"]    
     DXY_SYMBOL = "DX-Y.NYB"
 
     # Manajemen Resiko & Akun
