@@ -1,0 +1,52 @@
+name: XAU/USD Predator Cron Scanner
+
+on:
+  schedule:
+    # Berjalan setiap 15 menit saat sesi London & New York (06:00 - 18:00 UTC = 13:00 - 01:00 WIB), Senin s/d Jumat
+    - cron: '*/15 6-18 * * 1-5'
+  workflow_dispatch: # Memungkinkan tombol "Run workflow" manual dari GitHub
+
+jobs:
+  scan-and-alert:
+    name: Run Predator Scanner
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: 🦁 Execute XAU/USD Predator Analysis
+        env:
+          SYMBOL: ${{ secrets.SYMBOL || 'XAUUSD=X' }}
+          ACCOUNT_BALANCE: ${{ secrets.ACCOUNT_BALANCE || '10000.0' }}
+          RISK_PERCENT: ${{ secrets.RISK_PERCENT || '1.0' }}
+          CONTRACT_SIZE: ${{ secrets.CONTRACT_SIZE || '100.0' }}
+          MIN_RR_RATIO: ${{ secrets.MIN_RR_RATIO || '2.0' }}
+          SESSION_START_HOUR: 13
+          SESSION_END_HOUR: 23
+          RUN_CONTINUOUS_LOOP: "false"
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python main.py
+
+      - name: 📊 Upload Chart Artifact (If Generated)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: predator-chart-signal
+          path: chart_signal.png
+          if-no-files-found: ignore
+          retention-days: 7
