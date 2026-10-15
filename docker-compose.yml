@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  xauusd-predator:
+    build: .
+    container_name: xauusd_predator_bot
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - RUN_CONTINUOUS_LOOP=true
+      - POLL_INTERVAL_SECONDS=300
+    volumes:
+      - ./predator_state.json:/app/predator_state.json
+      - ./chart_signal.png:/app/chart_signal.png

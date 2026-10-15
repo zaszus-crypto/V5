@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches
+.pytest_cache/
+.mypy_cache/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Bot State & Images
+predator_state.json
+chart_signal.png
+*.log
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
